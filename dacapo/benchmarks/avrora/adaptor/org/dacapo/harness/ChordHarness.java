@@ -60,7 +60,11 @@ public class ChordHarness {
   }
 
   private static URL getURL(String fn) {
-    ClassLoader cl = ChordHarness.class.getClassLoader();
+	ClassLoader cl = ChordHarness.class.getClassLoader();
+	if (cl == null) {
+		cl = ClassLoader.getSystemClassLoader();
+	}
+    
     if (commandLineArgs.getVerbose())
       System.out.println("ChordHarness.getURL: returns " + cl.getResource(fn));
     return cl.getResource(fn);
@@ -126,7 +130,15 @@ public class ChordHarness {
         InputStream ins = null;
         if (commandLineArgs.getCnfOverride() == null) {
           String cnf = "cnf/" + bm + ".cnf";
-          ins = ChordHarness.class.getClassLoader().getResourceAsStream(cnf);
+          
+          ClassLoader cl = ChordHarness.class.getClassLoader();
+          
+          if (cl == null) {
+      		    cl = ClassLoader.getSystemClassLoader();
+      	   }
+          
+          ins = cl.getResourceAsStream(cnf);
+          
           if (ins == null) {
             System.err.println("Unknown benchmark: " + bm);
             System.exit(20);
