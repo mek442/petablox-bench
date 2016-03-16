@@ -541,6 +541,11 @@ public abstract class Benchmark {
    */
   public static URL getURL(String fn) {
     ClassLoader cl = Benchmark.class.getClassLoader();
+   
+    if (cl == null) {
+		    cl = ClassLoader.getSystemClassLoader();
+	 }
+    
     URL resource = cl.getResource(fn);
     if (verbose)
       System.out.println("Util.getURL: returns " + resource);
