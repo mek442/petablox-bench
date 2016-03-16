@@ -57,6 +57,9 @@ public class TestHarness {
 
   private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
+    if(cl==null){
+    	cl = ClassLoader.getSystemClassLoader();
+    }
     if (commandLineArgs.getVerbose())
       System.out.println("TestHarness.getURL: returns " + cl.getResource(fn));
     return cl.getResource(fn);
@@ -122,7 +125,12 @@ public class TestHarness {
         InputStream ins = null;
         if (commandLineArgs.getCnfOverride() == null) {
           String cnf = "cnf/" + bm + ".cnf";
-          ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
+          ClassLoader classLoader = TestHarness.class.getClassLoader();
+      	   if (classLoader == null) {
+      		    classLoader = ClassLoader.getSystemClassLoader();
+      	   }
+          ins = classLoader.getResourceAsStream(cnf);
+          
           if (ins == null) {
             System.err.println("Unknown benchmark: " + bm);
             System.exit(20);
