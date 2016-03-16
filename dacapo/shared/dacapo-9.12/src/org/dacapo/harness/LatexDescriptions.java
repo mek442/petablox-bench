@@ -40,7 +40,13 @@ public class LatexDescriptions {
   public static void print(String[] bms, PrintStream out) throws IOException {
     Config[] configs = new Config[bms.length];
     for (int j = 0; j < bms.length; j++) {
-      InputStream ins = LatexDescriptions.class.getClassLoader().getResourceAsStream("cnf/" + bms[j] + ".cnf");
+    	ClassLoader cl = LatexDescriptions.class.getClassLoader();
+    	   
+        if (cl == null) {
+    		    cl = ClassLoader.getSystemClassLoader();
+    	 }
+   	
+      InputStream ins = cl.getResourceAsStream("cnf/" + bms[j] + ".cnf");
       configs[j] = Config.parse(ins);
       ins.close();
     }
