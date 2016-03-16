@@ -217,7 +217,12 @@ public class CommandLineArgs {
    * Print the release notes to System.out
    */
   static void printReleaseNotes() throws IOException {
-    BufferedReader releaseNotes = new BufferedReader(new InputStreamReader(CommandLineArgs.class.getClassLoader().getResourceAsStream(RELEASE_NOTES)));
+	ClassLoader classLoader = CommandLineArgs.class.getClassLoader();
+	if (classLoader == null) {
+		    classLoader = ClassLoader.getSystemClassLoader();
+	}
+   
+	BufferedReader releaseNotes = new BufferedReader(new InputStreamReader(classLoader.getResourceAsStream(RELEASE_NOTES)));
 
     String line;
     while ((line = releaseNotes.readLine()) != null) {
@@ -242,7 +247,12 @@ public class CommandLineArgs {
 
   static List<String> extractBenchmarkSet() throws IOException {
     List<String> benchmarks = new ArrayList<String>();
-    URL url = CommandLineArgs.class.getClassLoader().getResource("cnf");
+    ClassLoader classLoader = CommandLineArgs.class.getClassLoader();
+	if (classLoader == null) {
+		    classLoader = ClassLoader.getSystemClassLoader();
+	}
+    URL url = classLoader.getResource("cnf");
+    
     String protocol = url.getProtocol();
     if (protocol.equals("jar")) {
       JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
